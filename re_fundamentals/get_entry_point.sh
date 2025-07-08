@@ -26,8 +26,13 @@ magic_number=$(readelf -h "$file_name" \
 class=$(readelf -h "$file_name" \
     | awk -F: '/Class:/ { sub(/^ +/, "", $2); print $2 }')
 
+# <<< updated here >>>
 byte_order=$(readelf -h "$file_name" \
-    | awk -F: '/Data:/ { sub(/^ +/, "", $2); print $2 }')
+    | awk -F: '/Data:/ {
+        sub(/^ +/, "", $2);
+        match($2, /(little endian|big endian)/, m);
+        print m[1]
+    }')
 
 entry_point_address=$(readelf -h "$file_name" \
     | awk -F: '/Entry point address:/ { sub(/^ +/, "", $2); print $2 }')
