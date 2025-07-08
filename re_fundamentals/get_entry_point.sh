@@ -1,5 +1,4 @@
-#!/usr/bin/env bash
-
+#!/bin/bash
 # --- get_entry_point.sh ---
 file_name="$1"
 
@@ -22,19 +21,18 @@ fi
 
 # 3. Extract fields
 magic_number=$(readelf -h "$file_name" \
-                | awk '/Magic:/ { $1=""; sub(/^ +/, ""); print }')
+    | awk '/Magic:/ { $1=""; sub(/^ +/, ""); print }')
 
 class=$(readelf -h "$file_name" \
-         | awk -F: '/Class:/ { sub(/^ +/, "", $2); print $2 }')
+    | awk -F: '/Class:/ { sub(/^ +/, "", $2); print $2 }')
 
 byte_order=$(readelf -h "$file_name" \
-             | awk -F: '/Data:/ { sub(/^ +/, "", $2); print $2 }')
+    | awk -F: '/Data:/ { sub(/^ +/, "", $2); print $2 }')
 
 entry_point_address=$(readelf -h "$file_name" \
-                     | awk -F: '/Entry point address:/ { sub(/^ +/, "", $2); print $2 }')
+    | awk -F: '/Entry point address:/ { sub(/^ +/, "", $2); print $2 }')
 
 # 4. Display using messages.sh
-# (Assumes messages.sh is in the same directory and defines display_elf_header_info)
 source "$(dirname "$0")/messages.sh"
 display_elf_header_info
 
