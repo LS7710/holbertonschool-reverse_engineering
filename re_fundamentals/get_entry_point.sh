@@ -26,13 +26,10 @@ magic_number=$(readelf -h "$file_name" \
 class=$(readelf -h "$file_name" \
     | awk -F: '/Class:/ { sub(/^ +/, "", $2); print $2 }')
 
-# <<< updated here >>>
+# <<< portable endian pick-out >>>
 byte_order=$(readelf -h "$file_name" \
-    | awk -F: '/Data:/ {
-        sub(/^ +/, "", $2);
-        match($2, /(little endian|big endian)/, m);
-        print m[1]
-    }')
+    | grep 'Data:' \
+    | sed -E 's/^.*Data:.*(little endian|big endian).*$/\1/')
 
 entry_point_address=$(readelf -h "$file_name" \
     | awk -F: '/Entry point address:/ { sub(/^ +/, "", $2); print $2 }')
